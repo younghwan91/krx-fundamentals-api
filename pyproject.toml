@@ -8,6 +8,7 @@ version = "0.1.0"
 description = "국내 기업 펀더멘탈 데이터 REST API — 재무제표, 투자지표, 배당, 대주주"
 readme = "README.md"
 license = "Apache-2.0"
+authors = [{ name = "Younghwan Chae", email = "chyohw97@gmail.com" }]
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.115.0",
