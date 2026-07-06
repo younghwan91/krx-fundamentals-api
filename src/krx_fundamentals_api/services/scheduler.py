@@ -46,6 +46,10 @@ async def crawl_companies() -> None:
 
         if not tickers:
             corp_map = _dart.get_corp_map()
+            if not corp_map:
+                # corp_codes 잡이 아직 안 돌았거나(재시작 등) 이 프로세스에서
+                # 처음 불리는 경우 — 순서에 기대지 않고 직접 채운다.
+                corp_map = await _dart.load_corp_codes()
             tickers = list(corp_map.keys())[:50]
 
         result = []
@@ -153,14 +157,29 @@ async def crawl_dividends_sample() -> None:
         await update_crawler_status(DataSource.DART, "dividends", error=str(e))
 
 
+async def bootstrap_dart_chain() -> None:
+    """앱 시작 시 최초 1회, 의존성 순서대로 초기 데이터를 채운다.
+
+    companies는 corp_codes(고유번호 매핑)에 의존하고, financials/dividends는
+    companies 캐시에 의존한다 — 독립된 "(초기)" 잡으로 따로 스케줄링하면
+    실행 순서가 보장 안 돼 첫 실행에서 전부 빈 목록으로 끝난다(실제로 겪은
+    문제). 순서를 명시적으로 강제하기 위해 하나의 잡으로 순차 실행한다.
+    """
+    await crawl_corp_codes()
+    await crawl_companies()
+    await crawl_financials_sample()
+    await crawl_dividends_sample()
+
+
 def start_scheduler() -> None:
     global _scheduler
     _scheduler = AsyncIOScheduler()
 
-    # 종목 마스터: 시작 시 즉시 + 매일 갱신
+    # 종목 마스터: 시작 시 즉시(체인 전체) + 매일 갱신
     _scheduler.add_job(crawl_corp_codes, "interval", seconds=settings.crawl_interval_master,
                        id="corp_codes", name="DART 고유번호")
-    _scheduler.add_job(crawl_corp_codes, id="corp_codes_init", name="DART 고유번호 (초기)")
+    _scheduler.add_job(bootstrap_dart_chain, id="dart_bootstrap_init",
+                       name="DART 초기 부트스트랩 (고유번호→기업개황→재무제표→배당)")
 
     # KRX 투자지표: 1시간마다
     _scheduler.add_job(crawl_krx_ratios, "interval", seconds=settings.crawl_interval_ratios,
