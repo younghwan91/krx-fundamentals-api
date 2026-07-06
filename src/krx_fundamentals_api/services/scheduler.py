@@ -39,21 +39,20 @@ async def crawl_corp_codes() -> None:
 
 
 async def crawl_companies() -> None:
-    """DART 기업개황 수집."""
-    try:
-        companies = await get_all_companies()
-        tickers = [c.ticker for c in companies] if companies else []
+    """DART 기업개황 수집 (전 상장 종목).
 
-        if not tickers:
-            corp_map = _dart.get_corp_map()
-            if not corp_map:
-                # corp_codes 잡이 아직 안 돌았거나(재시작 등) 이 프로세스에서
-                # 처음 불리는 경우 — 순서에 기대지 않고 직접 채운다.
-                corp_map = await _dart.load_corp_codes()
-            tickers = list(corp_map.keys())[:50]
+    corp_map(상장 종목 전체)을 직접 소스로 쓴다 — 이전엔 캐시된
+    companies에서 티커를 뽑아 왔는데, 그러면 최초 폴백으로 채워진 종목만
+    영원히 재조회하는 자기참조 루프에 갇혀 50개 밖으로 못 나갔다.
+    """
+    try:
+        corp_map = _dart.get_corp_map()
+        if not corp_map:
+            corp_map = await _dart.load_corp_codes()
+        tickers = list(corp_map.keys())
 
         result = []
-        for ticker in tickers[:200]:
+        for ticker in tickers:
             company = await _dart.fetch_company(ticker)
             if company:
                 result.append(company)
@@ -106,13 +105,13 @@ async def crawl_naver_supplement() -> None:
 
 
 async def crawl_financials_sample() -> None:
-    """주요 종목 재무제표 수집 (샘플)."""
+    """전 종목 재무제표 수집."""
     try:
         from datetime import datetime
 
         current_year = datetime.now().year
         companies = await get_all_companies()
-        tickers = [c.ticker for c in companies[:50]] if companies else []
+        tickers = [c.ticker for c in companies] if companies else []
         count = 0
 
         for ticker in tickers:
@@ -132,13 +131,13 @@ async def crawl_financials_sample() -> None:
 
 
 async def crawl_dividends_sample() -> None:
-    """주요 종목 배당 수집."""
+    """전 종목 배당 수집."""
     try:
         from datetime import datetime
 
         current_year = datetime.now().year
         companies = await get_all_companies()
-        tickers = [c.ticker for c in companies[:50]] if companies else []
+        tickers = [c.ticker for c in companies] if companies else []
         count = 0
 
         for ticker in tickers:
