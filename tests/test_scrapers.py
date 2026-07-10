@@ -78,6 +78,35 @@ async def test_krx_scraper_init():
     assert scraper.min_delay == 1.0
 
 
+_MDCSTAT01501_CSV = (
+    '"종목코드","종목명","시장구분","소속부","종가","대비","등락률",'
+    '"시가","고가","저가","거래량","거래대금","시가총액","상장주식수"\n'
+    '"005930","삼성전자","KOSPI","-","70000","0","0.00",'
+    '"70000","70000","70000","1000","70000000","417000000000000","5969782550"\n'
+    '"000660","SK하이닉스","KOSPI","-","150000","0","0.00",'
+    '"150000","150000","150000","500","75000000","109000000000000","728002365"\n'
+)
+
+
+async def test_krx_fetch_listed_shares_parses_shares():
+    scraper = KrxScraper()
+    scraper._get_otp = AsyncMock(return_value="otp-token")
+    scraper._download_csv = AsyncMock(return_value=_MDCSTAT01501_CSV)
+
+    shares = await scraper.fetch_listed_shares(Market.KOSPI, trd_dd="20260703")
+
+    assert shares["005930"] == 5969782550
+    assert shares["000660"] == 728002365
+
+
+async def test_krx_fetch_listed_shares_empty_on_no_rows():
+    scraper = KrxScraper()
+    scraper._get_otp = AsyncMock(return_value="otp-token")
+    scraper._download_csv = AsyncMock(return_value="")
+
+    assert await scraper.fetch_listed_shares(Market.KOSPI) == {}
+
+
 async def test_naver_scraper_init():
     scraper = NaverScraper()
     assert scraper.source == DataSource.NAVER
