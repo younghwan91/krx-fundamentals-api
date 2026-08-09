@@ -21,8 +21,16 @@ async def test_bootstrap_dart_chain_runs_in_dependency_order():
     calls: list[str] = []
 
     with (
-        patch.object(scheduler, "crawl_corp_codes", AsyncMock(side_effect=lambda: calls.append("corp_codes"))),
-        patch.object(scheduler, "crawl_companies", AsyncMock(side_effect=lambda: calls.append("companies"))),
+        patch.object(
+            scheduler,
+            "crawl_corp_codes",
+            AsyncMock(side_effect=lambda: calls.append("corp_codes")),
+        ),
+        patch.object(
+            scheduler,
+            "crawl_companies",
+            AsyncMock(side_effect=lambda: calls.append("companies")),
+        ),
         patch.object(
             scheduler,
             "crawl_financials_sample",
