@@ -8,9 +8,9 @@
 [![License](https://img.shields.io/github/license/younghwan91/krx-fundamentals-api)](https://github.com/younghwan91/krx-fundamentals-api/blob/main/LICENSE)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-younghwan--chae-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/younghwan-chae/)
 
-DART, KRX, 네이버 금융 등에서 기업 펀더멘탈 데이터를 자동 수집하여 정규화된 REST API로 제공합니다.
+DART·KRX·네이버 금융에서 기업 펀더멘탈 데이터를 자동으로 모아 정규화한 뒤 REST API로 제공합니다.
 
-백그라운드 스케줄러가 주기적으로 데이터를 갱신하고 Redis에 캐싱하여, API 요청 시 즉시 응답하는 **캐시 우선(cache-first)** 아키텍처로 설계되었습니다.
+백그라운드 스케줄러가 주기적으로 데이터를 갱신해 Redis에 캐싱하므로, 요청이 오면 크롤링을 기다리지 않고 즉시 응답합니다 — **캐시 우선(cache-first)** 구조입니다.
 
 ## 주요 기능
 
@@ -655,7 +655,7 @@ curl "http://localhost:8010/api/v1/screening?per_max=10&dividend_yield_min=3"
 
 ## 예제 코드
 
-`examples/` 디렉토리에 바로 실행 가능한 예제가 포함되어 있습니다.
+`examples/` 디렉터리에 바로 실행할 수 있는 예제가 들어 있습니다.
 
 | 파일 | 설명 |
 |------|------|
@@ -793,7 +793,7 @@ docker compose down            # 중지
 
 ## 라이선스
 
-MIT
+Apache License 2.0 — 전문은 [LICENSE](LICENSE) 참조.
 
 
 ---
