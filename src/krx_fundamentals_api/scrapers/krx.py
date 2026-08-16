@@ -226,6 +226,64 @@ class KrxScraper(BaseScraper):
         return mapping
 
     # ------------------------------------------------------------------ #
+    #  상장주식수 (Listed Shares)
+    # ------------------------------------------------------------------ #
+
+    async def fetch_listed_shares(
+        self, market: Market, trd_dd: str | None = None,
+    ) -> dict[str, int]:
+        """전종목 시세에서 ticker → 상장주식수 매핑을 반환한다.
+
+        시가총액과 동일한 MDCSTAT01501(전종목 시세) CSV에 상장주식수가 함께 담겨
+        있어, 인증 없이 전 종목을 한 번에 받을 수 있다. ``trd_dd``를 넘기면 과거
+        임의 거래일의 스냅샷도 받을 수 있으므로, point-in-time(생존편향 없는)
+        유니버스와 '시가총액 대비 수급 비율' 피처의 분모를 구성할 수 있다.
+        """
+        date = trd_dd or _recent_business_day()
+        mkt_id = MARKET_CODE.get(market)
+        if mkt_id is None:
+            logger.warning("[krx] Unsupported market for listed-shares: %s", market)
+            return {}
+
+        params = {
+            "locale": "ko_KR",
+            "mktId": mkt_id,
+            "trdDd": date,
+            "share": "1",
+            "money": "1",
+            "csvxls_isNo": "false",
+            "name": "fileDown",
+            "url": "dbms/MDC/STAT/standard/MDCSTAT01501",
+        }
+        otp = await self._get_otp(params)
+        text = await self._download_csv(otp)
+        headers, rows = _parse_csv_rows(text)
+        if not rows:
+            logger.warning("[krx] No listed-shares data for %s on %s", market, date)
+            return {}
+
+        col = {name: idx for idx, name in enumerate(headers)}
+        if "상장주식수" not in col or "종목코드" not in col:
+            logger.warning("[krx] 상장주식수 column not found in headers: %s", headers)
+            return {}
+
+        mapping: dict[str, int] = {}
+        for row in rows:
+            try:
+                ticker = row[col["종목코드"]].strip()
+                shares = _parse_int(row[col["상장주식수"]])
+                if shares is not None:
+                    mapping[ticker] = shares
+            except (KeyError, IndexError):
+                continue
+
+        logger.info(
+            "[krx] Fetched listed-shares for %d tickers in %s (%s)",
+            len(mapping), market.value, date,
+        )
+        return mapping
+
+    # ------------------------------------------------------------------ #
     #  업종별 시세 (Sector Overview)
     # ------------------------------------------------------------------ #
 
