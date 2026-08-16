@@ -39,11 +39,11 @@ docker compose up -d           # API 서버 + Redis 시작
 
 ```bash
 # 헬스체크
-curl http://localhost:8001/health
+curl http://localhost:8010/health
 # {"status":"ok"}
 
 # Swagger UI 확인
-open http://localhost:8001/docs
+open http://localhost:8010/docs
 ```
 
 ### 로컬 개발 환경
@@ -57,7 +57,7 @@ pip install -e ".[dev]"
 docker compose up -d redis
 
 # 개발 서버 실행 (자동 리로드)
-uvicorn krx_fundamentals_api.main:app --reload --port 8001
+uvicorn krx_fundamentals_api.main:app --reload --port 8010
 ```
 
 서버가 시작되면 자동으로 DART, KRX 등에서 펀더멘탈 데이터 수집을 시작합니다.
@@ -67,8 +67,8 @@ uvicorn krx_fundamentals_api.main:app --reload --port 8001
 ## API 문서
 
 서버 실행 후 **Swagger UI**에서 전체 API를 확인하고 테스트할 수 있습니다:
-- Swagger UI: http://localhost:8001/docs
-- ReDoc: http://localhost:8001/redoc
+- Swagger UI: http://localhost:8010/docs
+- ReDoc: http://localhost:8010/redoc
 
 ### 엔드포인트 목록
 
@@ -93,7 +93,7 @@ uvicorn krx_fundamentals_api.main:app --reload --port 8001
 #### 전체 기업 목록 조회
 
 ```bash
-curl "http://localhost:8001/api/v1/companies?market=KOSPI&page=1&page_size=3"
+curl "http://localhost:8010/api/v1/companies?market=KOSPI&page=1&page_size=3"
 ```
 
 ```json
@@ -140,7 +140,7 @@ curl "http://localhost:8001/api/v1/companies?market=KOSPI&page=1&page_size=3"
 #### 개별 기업 상세 정보
 
 ```bash
-curl "http://localhost:8001/api/v1/companies/005930"
+curl "http://localhost:8010/api/v1/companies/005930"
 ```
 
 ```json
@@ -170,10 +170,10 @@ curl "http://localhost:8001/api/v1/companies/005930"
 
 ```bash
 # 삼성전자 연간 재무제표
-curl "http://localhost:8001/api/v1/companies/005930/financials?period=annual"
+curl "http://localhost:8010/api/v1/companies/005930/financials?period=annual"
 
 # 분기별 재무제표
-curl "http://localhost:8001/api/v1/companies/005930/financials?period=quarter"
+curl "http://localhost:8010/api/v1/companies/005930/financials?period=quarter"
 ```
 
 ```json
@@ -215,7 +215,7 @@ curl "http://localhost:8001/api/v1/companies/005930/financials?period=quarter"
 #### 투자지표 조회
 
 ```bash
-curl "http://localhost:8001/api/v1/companies/005930/ratios"
+curl "http://localhost:8010/api/v1/companies/005930/ratios"
 ```
 
 ```json
@@ -256,7 +256,7 @@ curl "http://localhost:8001/api/v1/companies/005930/ratios"
 #### 배당정보 조회
 
 ```bash
-curl "http://localhost:8001/api/v1/companies/005930/dividends"
+curl "http://localhost:8010/api/v1/companies/005930/dividends"
 ```
 
 ```json
@@ -287,7 +287,7 @@ curl "http://localhost:8001/api/v1/companies/005930/dividends"
 #### 대주주 현황 조회
 
 ```bash
-curl "http://localhost:8001/api/v1/companies/005930/shareholders"
+curl "http://localhost:8010/api/v1/companies/005930/shareholders"
 ```
 
 ```json
@@ -326,7 +326,7 @@ curl "http://localhost:8001/api/v1/companies/005930/shareholders"
 #### 임원 현황 조회
 
 ```bash
-curl "http://localhost:8001/api/v1/companies/005930/executives"
+curl "http://localhost:8010/api/v1/companies/005930/executives"
 ```
 
 ```json
@@ -357,7 +357,7 @@ curl "http://localhost:8001/api/v1/companies/005930/executives"
 #### 시장 개요
 
 ```bash
-curl "http://localhost:8001/api/v1/market/overview"
+curl "http://localhost:8010/api/v1/market/overview"
 ```
 
 ```json
@@ -383,7 +383,7 @@ curl "http://localhost:8001/api/v1/market/overview"
 #### 섹터별 통계
 
 ```bash
-curl "http://localhost:8001/api/v1/market/sectors"
+curl "http://localhost:8010/api/v1/market/sectors"
 ```
 
 ```json
@@ -422,13 +422,13 @@ curl "http://localhost:8001/api/v1/market/sectors"
 
 ```bash
 # 시가총액 상위 종목
-curl "http://localhost:8001/api/v1/ranking/market_cap?order=desc&limit=5"
+curl "http://localhost:8010/api/v1/ranking/market_cap?order=desc&limit=5"
 
 # PER 하위 종목 (저PER)
-curl "http://localhost:8001/api/v1/ranking/per?order=asc&limit=5"
+curl "http://localhost:8010/api/v1/ranking/per?order=asc&limit=5"
 
 # 배당수익률 상위 종목
-curl "http://localhost:8001/api/v1/ranking/dividend_yield?order=desc&limit=5"
+curl "http://localhost:8010/api/v1/ranking/dividend_yield?order=desc&limit=5"
 ```
 
 ```json
@@ -463,7 +463,7 @@ curl "http://localhost:8001/api/v1/ranking/dividend_yield?order=desc&limit=5"
 
 ```bash
 # 저PER + 고배당 KOSPI 종목
-curl "http://localhost:8001/api/v1/screening?market=KOSPI&per_max=10&dividend_yield_min=3&page_size=5"
+curl "http://localhost:8010/api/v1/screening?market=KOSPI&per_max=10&dividend_yield_min=3&page_size=5"
 ```
 
 ```json
@@ -513,7 +513,7 @@ curl "http://localhost:8001/api/v1/screening?market=KOSPI&per_max=10&dividend_yi
 #### 수집 상태 확인
 
 ```bash
-curl "http://localhost:8001/api/v1/status"
+curl "http://localhost:8010/api/v1/status"
 ```
 
 ```json
@@ -576,13 +576,13 @@ curl "http://localhost:8001/api/v1/status"
 
 ```bash
 # 고ROE + 저PBR 가치주 스크리닝
-curl "http://localhost:8001/api/v1/screening?roe_min=15&pbr_max=1.0"
+curl "http://localhost:8010/api/v1/screening?roe_min=15&pbr_max=1.0"
 
 # KOSDAQ 반도체 섹터 중 시총 1조 이상
-curl "http://localhost:8001/api/v1/screening?market=KOSDAQ&sector=반도체&market_cap_min=1000000000000"
+curl "http://localhost:8010/api/v1/screening?market=KOSDAQ&sector=반도체&market_cap_min=1000000000000"
 
 # 배당주 스크리닝: PER 10 이하, 배당수익률 3% 이상
-curl "http://localhost:8001/api/v1/screening?per_max=10&dividend_yield_min=3"
+curl "http://localhost:8010/api/v1/screening?per_max=10&dividend_yield_min=3"
 ```
 
 ---
@@ -679,18 +679,20 @@ python examples/basic_usage.py
 cp .env.example .env
 ```
 
+아래 표는 [`config.py`](src/krx_fundamentals_api/config.py)의 `Settings` 와 1:1로 대응한다.
+
 | 변수 | 기본값 | 필수 | 설명 |
 |-----|-------|------|------|
-| `REDIS_URL` | `redis://localhost:6379` | — | Redis 연결 URL |
+| `REDIS_URL` | `redis://localhost:6379` | — | Redis 연결 URL. **Docker 로 띄우면 `redis://redis:6379`** (compose 서비스 이름) |
 | `DART_API_KEY` | — | ✅ | DART Open API 키 ([발급](https://opendart.fss.or.kr)) |
-| `COLLECT_INTERVAL_DART` | `86400` | — | DART 수집 주기 (초, 기본 24시간) |
-| `COLLECT_INTERVAL_KRX` | `3600` | — | KRX 수집 주기 (초, 기본 1시간) |
-| `COLLECT_INTERVAL_NAVER` | `3600` | — | 네이버 수집 주기 (초, 기본 1시간) |
+| `CRAWL_INTERVAL_MASTER` | `86400` | — | 종목마스터 수집 주기 (초, 기본 24시간) |
+| `CRAWL_INTERVAL_FINANCIALS` | `86400` | — | 재무제표 수집 주기 (초, 기본 24시간) |
+| `CRAWL_INTERVAL_RATIOS` | `3600` | — | 투자지표 수집 주기 (초, 기본 1시간) |
 | `LOG_LEVEL` | `INFO` | — | 로그 레벨 (`DEBUG`, `INFO`, `WARNING`, `ERROR`) |
-| `HOST` | `0.0.0.0` | — | 서버 바인드 주소 |
-| `PORT` | `8001` | — | 서버 포트 |
-| `WORKERS` | `1` | — | Uvicorn 워커 수 |
 | `CORS_ORIGINS` | `["*"]` | — | CORS 허용 origin 목록 |
+
+서버 바인드 주소·포트·워커 수는 환경변수가 아니라 실행 명령에서 정한다 — 컨테이너는
+`Dockerfile` 의 `--host 0.0.0.0 --port 8000`, 로컬은 위 `uvicorn ... --port 8010` 이다.
 
 ---
 
@@ -732,7 +734,7 @@ ruff format src/ tests/
 docker build -t krx-fundamentals-api .
 
 # 단독 실행
-docker run -p 8001:8001 --env-file .env krx-fundamentals-api
+docker run -p 8010:8000 --env-file .env krx-fundamentals-api
 
 # Docker Compose (권장)
 docker compose up -d           # 시작
@@ -767,7 +769,7 @@ docker compose down            # 중지
 |-------|------|------|
 | [kiwoom-rest-api](https://github.com/younghwan91/kiwoom-rest-api) | 매매 실행 + 실시간 시세 | `8000` |
 | [krx-news-rest-api](https://github.com/younghwan91/krx-news-rest-api) | 뉴스 / 공시 수집 | `8000` |
-| **krx-fundamentals-api** | 기업 펀더멘탈 데이터 ← 현재 | `8001` |
+| **krx-fundamentals-api** | 기업 펀더멘탈 데이터 ← 현재 | `8010` |
 
 ---
 
@@ -803,19 +805,19 @@ MIT
 - 🐛 버그·질문 → [Issues](https://github.com/younghwan91/krx-fundamentals-api/issues)
 - 📈 업데이트 소식 → [팔로우 @younghwan91](https://github.com/younghwan91)
 
-## 관련 프로젝트 — 한국 주식 퀀트 스택
+## 관련 프로젝트 — 오픈소스 퀀트 스택
 
-시세·펀더멘탈·뉴스 수집 REST API부터 데이터 파이프라인, 백테스트·알파 리서치까지 이어지는 오픈소스 스택의 일부입니다.
+한국·미국 주식과 암호화폐를 아우르는 오픈소스 스택입니다. 각 저장소는 독립적으로 쓸 수 있습니다.
 
-| 프로젝트 | 설명 |
-|---|---|
-| **[kiwoom-rest-api](https://github.com/younghwan91/kiwoom-rest-api)** | 키움증권 REST API Python 라이브러리 — 207개 엔드포인트 + 실시간 WebSocket |
-| **[krx-news-rest-api](https://github.com/younghwan91/krx-news-rest-api)** | 한국 주식 뉴스·공시 수집 REST API (FastAPI + Redis) |
-| **[quant-airflow](https://github.com/younghwan91/quant-airflow)** | 시세·수급·실적 데이터를 TimescaleDB로 수집하는 Airflow 파이프라인 |
-| **[kr-quant](https://github.com/younghwan91/kr-quant)** | 코스피·코스닥 알파 리서치 — walk-forward·랜덤 음성대조를 강제하는 검증 가드레일 |
-| **[quantbox-engine](https://github.com/younghwan91/quantbox-engine)** | 암호화폐 선물 백테스트·실행 엔진 — 룩어헤드 0, 백테스트↔실거래 일체화 |
-| **[opt_portfolio](https://github.com/younghwan91/opt_portfolio)** | VAA 기반 전술적 자산배분 백테스트·운용 시스템 |
-| **[automated-stock-trading-systems](https://github.com/younghwan91/automated-stock-trading-systems)** | Bensdorp의 7개 비상관 트레이딩 시스템 백테스터 (교육용 재구현) |
+| 축 | 프로젝트 | 설명 |
+|---|---|---|
+| 🇰🇷 한국 주식 | **[kiwoom-rest-api](https://github.com/younghwan91/kiwoom-rest-api)** | 키움증권 REST API Python 라이브러리 — 국내주식 엔드포인트 전수·실시간 WebSocket, sync + async (`pip install kiwoom-client`) |
+| 🇰🇷 한국 주식 | **[krx-news-rest-api](https://github.com/younghwan91/krx-news-rest-api)** | 한국 주식 뉴스·공시 수집 REST API (FastAPI + Redis) |
+| 🇰🇷 한국 주식 | **[quant-airflow](https://github.com/younghwan91/quant-airflow)** | 시세·수급·실적을 TimescaleDB 로 수집하는 Airflow 파이프라인 — 상장폐지 종목까지 담아 생존편향을 막는다 |
+| 🇰🇷 한국 주식 | **[kr-quant](https://github.com/younghwan91/kr-quant)** | 코스피·코스닥 알파 리서치 — walk-forward·랜덤 음성대조·purged CV·Deflated Sharpe 를 CI 가드레일로 강제 |
+| 🇺🇸 미국 주식 | **[opt_portfolio](https://github.com/younghwan91/opt_portfolio)** | 미국주식 팩터 엔진 — point-in-time·생존편향 보정 데이터 위에서 walk-forward 를 Deflated Sharpe 로 게이팅 (+ VAA 자산배분 백테스터) |
+| 🇺🇸 미국 주식 | **[automated-stock-trading-systems](https://github.com/younghwan91/automated-stock-trading-systems)** | Bensdorp 의 7개 비상관 트레이딩 시스템 백테스터 (교육용 재구현) |
+| ₿ 암호화폐 | **[quantbox-engine](https://github.com/younghwan91/quantbox-engine)** | 암호화폐 선물 백테스트·실행 엔진 — 룩어헤드 0, 백테스트↔실거래 일체화 |
 
 ## 만든 사람
 
