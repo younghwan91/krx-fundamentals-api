@@ -177,5 +177,5 @@ Apache-2.0 ([LICENSE](LICENSE))
 | 🇰🇷 [kr-quant](https://github.com/younghwan91/kr-quant) | 코스피·코스닥 알파 리서치 |
 | 🇺🇸 [portfolio-research](https://github.com/younghwan91/portfolio-research) | 미국주식 팩터 엔진 + ETF 전술배분 |
 | 🇺🇸 [automated-stock-trading-systems](https://github.com/younghwan91/automated-stock-trading-systems) | 비상관 트레이딩 시스템 백테스터 |
-| ₿ [quantbox-engine](https://github.com/younghwan91/quantbox-engine) | 암호화폐 선물 백테스트·실행 엔진 |
+| ₿ [binance-quant-engine](https://github.com/younghwan91/binance-quant-engine) | 암호화폐 선물 백테스트·실행 엔진 |
 
